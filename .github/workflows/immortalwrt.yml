@@ -26,7 +26,7 @@ jobs:
 
     - name: Clone source code
       run: |
-        git clone https://github.com/immortalwrt/immortalwrt.git && cp -r files immortalwrt && chmod 755 -R immortalwrt/files && cat feeds.buildinfo >>immortalwrt/feeds.conf.default
+        git clone -b v24.10.5 --single-branch --filter=blob:none https://github.com/immortalwrt/immortalwrt.git immortalwrt && cp -r files immortalwrt && chmod 755 -R immortalwrt/files && cat feeds.buildinfo >>immortalwrt/feeds.conf.default
         cat immortalwrt/feeds.conf.default
 
     - name: Update feeds
