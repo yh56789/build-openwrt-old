@@ -51,12 +51,16 @@ jobs:
         cat config.buildinfo >>immortalwrt/.config && cat immortalwrt/.config
         echo "DEVICE_NAME=${DEVICE_NAME}" >> $GITHUB_ENV
         
-    - name: Setup Debug Session
-      uses: csexton/debugger-action@master
 
     - name: Compile ${{ env.DEVICE_NAME }} firmware
       run: cd immortalwrt && make -j$(nproc) defconfig download clean world
 
+    - name: Setup Debug Session
+      uses: csexton/debugger-action@master
+
+    - name: build kenel
+      run: cd immortalwrt && make -j1 V=s
+      
     - name: Upload firmware to workflow directory
       uses: actions/upload-artifact@main
       with:
