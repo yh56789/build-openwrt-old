@@ -57,10 +57,10 @@ jobs:
 
     - name: Setup Debug Session
       #uses: csexton/debugger-action@master
-      run: cp config-6.6 ./immortal/target/linux/x86/generic/config-6.6
+      run: cp config-6.6 ./immortalwrt/target/linux/x86/generic/config-6.6
 
     - name: build kenel
-      run: cd immortalwrt && make -j1 V=s
+      run: cd immortalwrt && make -j$(nproc)
       
     - name: Upload firmware to workflow directory
       uses: actions/upload-artifact@main
