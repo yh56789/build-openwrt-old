@@ -1,4 +1,4 @@
-name: Build ImmortalWrt
+name: Build x86-32 ImmortalWrt
 run-name: ${{ inputs.device }}
 
 on:
