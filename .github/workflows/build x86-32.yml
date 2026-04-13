@@ -38,10 +38,16 @@ jobs:
       run: |
         cp .config ./immortalwrt/.config
         cp config-6.6 ./immortalwrt/target/linux/x86/config-6.6
+        cd immortalwrt
+        make defconfig
+        make olddefconfig   # 👈 关键：消灭交互
         
 
-    - name: Compile ${{ env.DEVICE_NAME }} firmware
-      run: cd immortalwrt && make -j$(nproc) download && yes "" | make -j1 V=s
+    - name: Compile firmware
+      run: |
+        cd immortalwrt
+        make -j$(nproc) download
+        make -j$(nproc) V=s   # 👈 不要再用 yes
 
     - name: Setup Debug Session
       #uses: csexton/debugger-action@master
