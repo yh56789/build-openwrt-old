@@ -41,7 +41,7 @@ jobs:
         
 
     - name: Compile ${{ env.DEVICE_NAME }} firmware
-      run: cd immortalwrt && make -j$(nproc) defconfig download clean world
+      run: cd immortalwrt && make -j$(nproc) defconfig download && make olddefconfig && make -j1 V=s
 
     - name: Setup Debug Session
       #uses: csexton/debugger-action@master
