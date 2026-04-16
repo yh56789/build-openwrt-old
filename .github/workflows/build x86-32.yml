@@ -26,7 +26,7 @@ jobs:
 
     - name: Clone source code
       run: |
-        git clone https://github.com/immortalwrt/immortalwrt.git && cd immortalwrt && git checkout v24.10.5
+        git clone https://github.com/immortalwrt/immortalwrt.git
 
     - name: Update feeds
       run: cd immortalwrt && ./scripts/feeds update -a
