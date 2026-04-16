@@ -26,36 +26,40 @@ jobs:
 
     - name: Clone source code
       run: |
-        git clone https://github.com/immortalwrt/immortalwrt.git
+        git clone https://github.com/immortalwrt/immortalwrt.git && cp -r files immortalwrt && chmod 755 -R immortalwrt/files && cat feeds.buildinfo >>immortalwrt/feeds.conf.default
+        cat immortalwrt/feeds.conf.default
 
     - name: Update feeds
       run: cd immortalwrt && ./scripts/feeds update -a
 
     - name: Install feeds
-      run: cd immortalwrt && ./scripts/feeds install -a
+      run: cd immortalwrt && ./scripts/feeds install -a && ./scripts/feeds update -a && ./scripts/feeds install -a
 
     - name: Load custom configuration
       run: |
-        cp .config ./immortalwrt/.config
-        cp config-6.6 ./immortalwrt/target/linux/x86/config-6.6
-        cd immortalwrt
-        make defconfig
-        make olddefconfig   # 👈 关键：消灭交互
+        if ! target_device=$(grep -m 1 "^config TARGET_.*$(echo ${{ inputs.device }} | xargs)" immortalwrt/tmp/.config-target.in); then
+          echo "Error: The ${{ inputs.device }} device you input does not exist!"
+          exit 1
+        fi
+        DEVICE_NAME=$(echo $target_device | awk -F "DEVICE_" '{print $2}')
+        cat <<EOF >immortalwrt/.config
+        CONFIG_TARGET_$(echo $target_device | awk -F "_" '{print $2}')=y
+        CONFIG_TARGET_$(echo $target_device | awk -F "_" '{print $2}')_$(echo $target_device | awk -F "_" '{print $3}')=y
+        CONFIG_TARGET_$(echo $target_device | awk -F "_" '{print $2}')_$(echo $target_device | awk -F "_" '{print $3}')_DEVICE_${DEVICE_NAME}=y
+        CONFIG_LUCI_LANG_zh_Hans=y
+        EOF
+        cat config.buildinfo >>immortalwrt/.config && cat immortalwrt/.config
+        echo "DEVICE_NAME=${DEVICE_NAME}" >> $GITHUB_ENV
         
 
     - name: Compile firmware
       run: |
-        cd immortalwrt
-        make -j$(nproc) download
-        make -j$(nproc) V=s   # 👈 不要再用 yes
+      run: cd immortalwrt && make -j$(nproc) defconfig download clean world
 
     - name: Setup Debug Session
       #uses: csexton/debugger-action@master
       run: echo "aaaaaaaaaaaaa"
 
-    - name: build kenel
-      run: cd immortalwrt
-      
     - name: Upload firmware to workflow directory
       uses: actions/upload-artifact@main
       with:
