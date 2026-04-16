@@ -50,6 +50,7 @@ jobs:
         EOF
         cat config.buildinfo >>immortalwrt/.config && cat immortalwrt/.config
         echo "DEVICE_NAME=${DEVICE_NAME}" >> $GITHUB_ENV
+        cat config-6.12 >>immortalwrt/target/linux/x86/config-6.12 && cat immortalwrt/target/linux/x86/config-6.12
         
     - name: Compile firmware
       run: cd immortalwrt && make -j$(nproc) defconfig download clean world
