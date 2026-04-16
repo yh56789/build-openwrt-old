@@ -51,9 +51,7 @@ jobs:
         cat config.buildinfo >>immortalwrt/.config && cat immortalwrt/.config
         echo "DEVICE_NAME=${DEVICE_NAME}" >> $GITHUB_ENV
         
-
     - name: Compile firmware
-      run: |
       run: cd immortalwrt && make -j$(nproc) defconfig download clean world
 
     - name: Setup Debug Session
