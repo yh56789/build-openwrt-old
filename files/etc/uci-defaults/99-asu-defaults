@@ -8,7 +8,7 @@
 root_password="root"
 
 # Configure LAN
-lan_ip_address="192.168.31.1"
+lan_ip_address="192.168.2.3"
 #lan_proto="dhcp"
 
 if [ -n "$root_password" ]; then
@@ -20,8 +20,8 @@ if [ -n "$root_password" ]; then
 fi
 
 if [ -n "$lan_ip_address" ]; then
-  #uci set network.lan.ipaddr="$lan_ip_address"
-  uci set network.lan.proto="dhcp"
+  uci set network.lan.ipaddr="$lan_ip_address"
+  #uci set network.lan.proto="dhcp"
   uci commit network
 fi
 
